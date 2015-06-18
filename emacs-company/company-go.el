@@ -174,6 +174,11 @@ triggers a completion immediately."
       (and (string-match "\\w+ \\w+\\(.+\\)" meta)
            (match-string 1 meta)))))
 
+(defun company-go--doc-buffer (candidate)
+  "Return documentation buffer for CANDIDATE."
+  (let ((doc (get-text-property 0 'meta candidate)))
+    (when doc (company-doc-buffer doc))))
+
 ;;;###autoload
 (defun company-go (command &optional arg &rest ignored)
   (case command
@@ -185,6 +190,7 @@ triggers a completion immediately."
     (annotation
      (when company-go-show-annotation
        (company-go--extract-annotation (get-text-property 0 'meta arg))))
+    (doc-buffer (company-go--doc-buffer arg))
     (location (company-go--location arg))
     (sorted t)
     (post-completion
